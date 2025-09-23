@@ -1,0 +1,4 @@
+goal_id,category,target,progress,due_date,status
+G1,Fitness,Deadlift 600,550,2025-12-31,active
+G2,Learning,Read 24 books,18,2025-12-31,active
+G3,Career,Complete MCOS MVP,40,2025-11-30,active
