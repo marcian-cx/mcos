@@ -36,10 +36,10 @@ class Editor(QWidget):
         }
         """)
         
-        # Override keyPressEvent for task toggling
+        # Override keyPressEvent for task toggling with Cmd+T
         original_keypress = self.edit.keyPressEvent
         def keypress_handler(event):
-            if event.key() == Qt.Key.Key_Space and not self.is_preview_mode:
+            if event.key() == Qt.Key.Key_T and event.modifiers() & Qt.KeyboardModifier.ControlModifier and not self.is_preview_mode:
                 if self._try_toggle_task():
                     return
             original_keypress(event)

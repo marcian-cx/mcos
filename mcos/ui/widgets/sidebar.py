@@ -71,11 +71,14 @@ class Sidebar(QWidget):
                 if current.isValid():
                     self._open(current)
                 return
-            elif event.key() == Qt.Key.Key_N:
+            elif event.key() == Qt.Key.Key_N and event.modifiers() & Qt.KeyboardModifier.ControlModifier:
                 self._new_file()
                 return
-            elif event.key() == Qt.Key.Key_D:
+            elif event.key() == Qt.Key.Key_D and event.modifiers() & Qt.KeyboardModifier.ControlModifier:
                 self._delete_file()
+                return
+            elif event.key() == Qt.Key.Key_R and event.modifiers() & Qt.KeyboardModifier.ControlModifier:
+                self._rename_file()
                 return
             original_keypress(event)
         self.view.keyPressEvent = keypress_handler
@@ -116,7 +119,48 @@ class Sidebar(QWidget):
                 file_item.setData("file", Qt.ItemDataRole.UserRole + 1)  # Store type
                 dir_item.appendRow(file_item)
 
+    def _get_expanded_paths(self):
+        """Get list of currently expanded directory paths"""
+        expanded = []
+        for i in range(self.model.rowCount()):
+            self._collect_expanded_paths(self.model.item(i), expanded)
+        return expanded
+    
+    def _collect_expanded_paths(self, item, expanded):
+        """Recursively collect expanded directory paths"""
+        if item:
+            index = self.model.indexFromItem(item)
+            if self.view.isExpanded(index):
+                item_type = item.data(Qt.ItemDataRole.UserRole + 1)
+                if item_type == "directory":
+                    path = item.data(Qt.ItemDataRole.UserRole)
+                    expanded.append(path)
+            
+            for i in range(item.rowCount()):
+                self._collect_expanded_paths(item.child(i), expanded)
+    
+    def _restore_expanded_paths(self, expanded_paths):
+        """Restore expanded state for directories"""
+        for i in range(self.model.rowCount()):
+            self._expand_matching_paths(self.model.item(i), expanded_paths)
+    
+    def _expand_matching_paths(self, item, expanded_paths):
+        """Recursively expand directories that were previously expanded"""
+        if item:
+            item_type = item.data(Qt.ItemDataRole.UserRole + 1)
+            if item_type == "directory":
+                path = item.data(Qt.ItemDataRole.UserRole)
+                if path in expanded_paths:
+                    index = self.model.indexFromItem(item)
+                    self.view.expand(index)
+            
+            for i in range(item.rowCount()):
+                self._expand_matching_paths(item.child(i), expanded_paths)
+
     def _populate(self):
+        # Save current expanded state
+        expanded_paths = self._get_expanded_paths()
+        
         self.model.removeRows(0, self.model.rowCount())
         root = QStandardItem(f"/{os.path.basename(self.vault_path)}")
         root.setEditable(False)
@@ -124,7 +168,12 @@ class Sidebar(QWidget):
         root.setData("directory", Qt.ItemDataRole.UserRole + 1)
         self.model.appendRow(root)
         self._add_dir(root, self.vault_path)
+        
+        # Always expand root
         self.view.expand(self.model.indexFromItem(root))
+        
+        # Restore previously expanded directories
+        self._restore_expanded_paths(expanded_paths)
 
     def _open(self, ix: QModelIndex):
         item = self.model.itemFromIndex(ix)
@@ -226,3 +275,54 @@ class Sidebar(QWidget):
                 
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"Failed to delete file: {str(e)}")
+
+
+
+    def _rename_file(self):
+        """Rename the selected file"""
+        current = self.view.currentIndex()
+        if not current.isValid():
+            return
+            
+        item = self.model.itemFromIndex(current)
+        if not item:
+            return
+            
+        item_type = item.data(Qt.ItemDataRole.UserRole + 1)
+        old_path = item.data(Qt.ItemDataRole.UserRole)
+        
+        if item_type != "file":
+            QMessageBox.warning(self, "Cannot Rename", "Can only rename files, not directories!")
+            return
+            
+        old_filename = os.path.basename(old_path)
+        name_without_ext = os.path.splitext(old_filename)[0]
+        
+        new_name, ok = QInputDialog.getText(
+            self, 
+            "Rename File", 
+            "Enter new filename (without .md extension):", 
+            text=name_without_ext
+        )
+        
+        if not ok or not new_name.strip():
+            return
+            
+        if not new_name.endswith('.md'):
+            new_name += '.md'
+            
+        new_path = os.path.join(os.path.dirname(old_path), new_name)
+        
+        if os.path.exists(new_path):
+            QMessageBox.warning(self, "File Exists", f"File '{new_name}' already exists!")
+            return
+            
+        try:
+            os.rename(old_path, new_path)
+            self._populate()
+            # If the renamed file was open in editor, update it
+            if hasattr(self, 'on_open') and callable(self.on_open):
+                self.on_open(new_path)
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Failed to rename file: {str(e)}")
+            
