@@ -390,11 +390,15 @@
 		</data>
 		<key>Resources/base_library.zip</key>
 		<data>
-		HSznKdG+mQnIUwsz4rsUSGcmMpk=
+		UB/Ze0y8ZvpC/3q2JqKWregRf7k=
 		</data>
 		<key>Resources/dateutil/zoneinfo/dateutil-zoneinfo.tar.gz</key>
 		<data>
 		c+JCO8FU6iR/UDl+lpaYpwphJ6s=
+		</data>
+		<key>Resources/demo_vault/Calendar/test.md</key>
+		<data>
+		RH+Ny5n8d4KBi910d4HXHKb7sq8=
 		</data>
 		<key>Resources/demo_vault/Goals/goals.csv</key>
 		<data>
@@ -5363,7 +5367,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			HNNTBNxJi9zLwGA/1NVs+V6QV2dXXKMNWJeFTonTZpk=
+			PcClXND+5D45BQiT2pEzYtQ1mPJLrmHk4cU0rlljznM=
 			</data>
 		</dict>
 		<key>Resources/dateutil/zoneinfo/dateutil-zoneinfo.tar.gz</key>
@@ -5371,6 +5375,13 @@
 			<key>hash2</key>
 			<data>
 			0+pS57bpaN4NiE3xKIGTWW+pW4A9tPkqGCeac5gARHU=
+			</data>
+		</dict>
+		<key>Resources/demo_vault/Calendar/test.md</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			CH02TntPP3+UMb6fDPh9frTLHcfsoJD1vDhZ4HQNk3o=
 			</data>
 		</dict>
 		<key>Resources/demo_vault/Goals/goals.csv</key>

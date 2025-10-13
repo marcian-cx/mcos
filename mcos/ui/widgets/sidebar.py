@@ -44,17 +44,10 @@ class Sidebar(QWidget):
             background-color: #222222;
         }
         QTreeView::branch {
-            background-color: #000000;
-        }
-        QTreeView::branch:has-children:closed:before {
-            content: ">";
-            color: #ffffff;
-            font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
-        }
-        QTreeView::branch:has-children:open:before {
-            content: "v";
-            color: #ffffff;
-            font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+            background: transparent;
+            border: none;
+            width: 0px;
+            height: 0px;
         }
         """)
 
@@ -62,6 +55,8 @@ class Sidebar(QWidget):
 
         self.view.doubleClicked.connect(self._open)
         self.view.activated.connect(self._open)  # Triggered by Enter key
+        self.view.expanded.connect(self._on_expanded)
+        self.view.collapsed.connect(self._on_collapsed)
         
         # Override keyPressEvent to handle Enter manually
         original_keypress = self.view.keyPressEvent
@@ -89,35 +84,37 @@ class Sidebar(QWidget):
         lay.addWidget(self.view)
 
     def _add_dir(self, parent_item: QStandardItem, path: str):
-        # Add directory node with terminal-style folder prefix
+        # Add directory node with simple caret - no prefix lines
         dir_name = os.path.basename(path) or path
-        dir_item = QStandardItem(f"/{dir_name}")
+        dir_item = QStandardItem(f"▶ {dir_name}")
         dir_item.setEditable(False)
         dir_item.setData(path, Qt.ItemDataRole.UserRole)
-        dir_item.setData("directory", Qt.ItemDataRole.UserRole + 1)  # Store type
+        dir_item.setData("directory", Qt.ItemDataRole.UserRole + 1)
         parent_item.appendRow(dir_item)
 
-        # First add subdirectories, then md files (sorted)
+        # Get all entries
         try:
             entries = sorted(os.listdir(path), key=str.lower)
         except PermissionError:
             return
 
-        # Directories
-        for name in entries:
+        # Separate directories and files
+        dirs = [e for e in entries if os.path.isdir(os.path.join(path, e)) and not e.startswith('.')]
+        files = [e for e in entries if os.path.isfile(os.path.join(path, e)) and e.lower().endswith(MD_FILTER)]
+        
+        # Add directories
+        for name in dirs:
             full = os.path.join(path, name)
-            if os.path.isdir(full) and not name.startswith('.'):
-                self._add_dir(dir_item, full)
+            self._add_dir(dir_item, full)
 
-        # Markdown files
-        for name in entries:
+        # Add files
+        for name in files:
             full = os.path.join(path, name)
-            if os.path.isfile(full) and name.lower().endswith(MD_FILTER):
-                file_item = QStandardItem(f"  {name}")
-                file_item.setEditable(False)
-                file_item.setData(full, Qt.ItemDataRole.UserRole)
-                file_item.setData("file", Qt.ItemDataRole.UserRole + 1)  # Store type
-                dir_item.appendRow(file_item)
+            file_item = QStandardItem(f"  {name}")
+            file_item.setEditable(False)
+            file_item.setData(full, Qt.ItemDataRole.UserRole)
+            file_item.setData("file", Qt.ItemDataRole.UserRole + 1)
+            dir_item.appendRow(file_item)
 
     def _get_expanded_paths(self):
         """Get list of currently expanded directory paths"""
@@ -162,12 +159,34 @@ class Sidebar(QWidget):
         expanded_paths = self._get_expanded_paths()
         
         self.model.removeRows(0, self.model.rowCount())
-        root = QStandardItem(f"/{os.path.basename(self.vault_path)}")
+        root = QStandardItem(f"▼ {os.path.basename(self.vault_path)}")
         root.setEditable(False)
         root.setData(self.vault_path, Qt.ItemDataRole.UserRole)
         root.setData("directory", Qt.ItemDataRole.UserRole + 1)
         self.model.appendRow(root)
-        self._add_dir(root, self.vault_path)
+        
+        # Populate root directory contents
+        try:
+            entries = sorted(os.listdir(self.vault_path), key=str.lower)
+            dirs = [e for e in entries if os.path.isdir(os.path.join(self.vault_path, e)) and not e.startswith('.')]
+            files = [e for e in entries if os.path.isfile(os.path.join(self.vault_path, e)) and e.lower().endswith(MD_FILTER)]
+            
+            # Add directories
+            for name in dirs:
+                full = os.path.join(self.vault_path, name)
+                self._add_dir(root, full)
+
+            # Add files
+            for name in files:
+                full = os.path.join(self.vault_path, name)
+                file_item = QStandardItem(f"  {name}")
+                file_item.setEditable(False)
+                file_item.setData(full, Qt.ItemDataRole.UserRole)
+                file_item.setData("file", Qt.ItemDataRole.UserRole + 1)
+                root.appendRow(file_item)
+                
+        except PermissionError:
+            pass
         
         # Always expand root
         self.view.expand(self.model.indexFromItem(root))
@@ -325,4 +344,22 @@ class Sidebar(QWidget):
                 self.on_open(new_path)
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to rename file: {str(e)}")
+
+    def _on_expanded(self, index):
+        """Handle directory expansion - change ▶ to ▼"""
+        item = self.model.itemFromIndex(index)
+        if item and item.data(Qt.ItemDataRole.UserRole + 1) == "directory":
+            text = item.text()
+            if "▶" in text:
+                new_text = text.replace("▶", "▼")
+                item.setText(new_text)
+
+    def _on_collapsed(self, index):
+        """Handle directory collapse - change ▼ to ▶"""
+        item = self.model.itemFromIndex(index)
+        if item and item.data(Qt.ItemDataRole.UserRole + 1) == "directory":
+            text = item.text()
+            if "▼" in text:
+                new_text = text.replace("▼", "▶")
+                item.setText(new_text)
             

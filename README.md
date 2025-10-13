@@ -1,8 +1,197 @@
-Here’s a clean summary you can drop into a doc, email, or pitch:
+# **Mission Command OS (MCOS)**
+
+## **Quick Start Commands**
+
+### **Development Setup**
+```bash
+# Clone and setup
+git clone <repository-url>
+cd mcos
+
+# Create virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run in development mode
+./launch.sh
+
+### **Build & Package**
+```bash
+# Create app icon (one-time setup)
+python create_icon.py
+iconutil -c icns mcos.iconset
+
+# Build standalone app
+source .venv/bin/activate
+pyinstaller mcos.spec --clean
+
+# Quick rebuild during development
+./rebuild_app.sh
+```
+
+### **Daily Use Setup**
+```bash
+# Setup for daily use (creates vault, installs app, desktop launcher)
+./setup_daily_use.sh
+
+# Manual vault creation
+mkdir -p ~/mcos_vault/{Inbox,Projects,Goals,Reviews,Calendar,Notes}
+cp -r demo_vault/* ~/mcos_vault/
+
+# Install to Applications folder
+cp -r dist/MCOS.app /Applications/
+```
+
+### **Launch Commands**
+```bash
+# Development mode
+python -m mcos.app --vault ~/mcos_vault
+
+# Standalone app (after building)
+open dist/MCOS.app
+
+# From Applications (after install)
+open /Applications/MCOS.app
+
+# Desktop launcher (after setup)
+~/Desktop/Launch\ MCOS.command
+```
+
+### **Export & Distribution**
+```bash
+# Create distributable zip
+zip -r MCOS-$(date +%Y%m%d).zip dist/MCOS.app
+
+# Create vault backup
+zip -r vault-backup-$(date +%Y%m%d).zip ~/mcos_vault
+
+# Clean build artifacts
+rm -rf build/ dist/
+
+# Full clean rebuild
+rm -rf build/ dist/ && pyinstaller mcos.spec --clean
+```
+
+### **Development Workflow**
+```bash
+# Quick development cycle
+./rebuild_app.sh                    # Rebuild and optionally install
+python -m pytest mcos/tests/        # Run tests
+python -m mcos.app --vault ./demo_vault  # Test run
+
+# Check dependencies
+pip list
+pip check
+
+# Update requirements
+pip freeze > requirements.txt
+```
+
+### **Troubleshooting & Maintenance**
+```bash
+# Clean everything and start fresh
+rm -rf .venv build/ dist/ mcos.iconset/
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# Fix icon issues
+python create_icon.py
+iconutil -c icns mcos.iconset
+
+# Check PyInstaller issues
+pyinstaller mcos.spec --clean --debug all
+
+# Test vault structure
+ls -la ~/mcos_vault/
+ls -la demo_vault/
+
+# Remove and reinstall app
+rm -rf /Applications/MCOS.app
+cp -r dist/MCOS.app /Applications/
+
+# Check app permissions (macOS)
+xattr -d com.apple.quarantine /Applications/MCOS.app
+```
+
+### **System Requirements**
+- **macOS**: 10.14+ (for PyQt6 compatibility)
+- **Python**: 3.9+ (tested with 3.9)
+- **Dependencies**: See `requirements.txt`
+- **Disk Space**: ~200MB for built app bundle
+
+### **Keyboard Shortcuts**
+
+#### **File Operations (Sidebar)**
+| Shortcut | Action |
+|----------|--------|
+| `Enter` | Open selected file/folder |
+| `Ctrl+N` | Create new file |
+| `Ctrl+D` | Delete selected file |
+| `Ctrl+R` | Rename selected file |
+
+#### **Editor**
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl+S` | Save current file |
+| `Ctrl+T` | Toggle task checkbox (- [ ] ↔ - [x]) |
+| `Enter` | Auto-continue checkboxes and lists |
+| `Tab` | Indent line or selection |
+| `Shift+Tab` | Dedent line or selection |
+
+#### **Navigation**
+| Shortcut | Action |
+|----------|--------|
+| `↑/↓` | Navigate sidebar tree |
+| `←/→` | Collapse/expand folders |
+| `Ctrl+Left` | Focus sidebar |
+| `Ctrl+Right` | Focus editor |
+| `Enter` | Open file (from sidebar) |
+
+#### **System (Planned)**
+| Shortcut | Action | Status |
+|----------|--------|--------|
+| `Ctrl+K` | Quick file switcher | 🚧 Planned |
+| `Ctrl+F` | Find in file | 🚧 Planned |
+| `Ctrl+H` | Find & replace | 🚧 Planned |
+| `Alt+Left` | Navigate back | 🚧 Planned |
+| `Ctrl+D` | Dashboard mode | 🚧 Planned |
+| `F9` | AI hook (selected text) | 🚧 Planned |
+
+#### **Task Management**
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl+T` | Toggle task: `- [ ]` ↔ `- [x]` |
+| `Space` | Toggle task on current line |
+
+**Note**: All shortcuts use `Ctrl` on macOS (maps to `Cmd` key automatically via PyQt6).
+
+### **Plain Text Markdown Editing**
+
+MCOS features a **clean, distraction-free markdown editor**:
+
+#### **Features:**
+- **Pure plain text editing** with monospace font
+- **Smart task management**: 
+  - `Ctrl+T` toggles checkboxes `- [ ]` ↔ `- [x]`
+  - `Enter` on checkbox creates new checkbox
+  - `Tab` indents for nested checkboxes
+- **Intelligent indentation**: Tab/Shift+Tab works on single lines or selections
+- **Clean navigation**: `Ctrl+Left/Right` to switch between sidebar and editor
+- **Auto-continuation**: Enter continues lists and tasks automatically
+- **Keyboard-driven**: All operations via shortcuts
+- **E-ink optimized**: Pure black/white, crisp text
+- **Crash-safe saves**: Temporary files with timestamps
+- **Clean architecture**: Services handle logic, UI handles presentation
+
+**Smart, reliable markdown editing with proper task management and nested structures.**
 
 ---
 
-# **Mission Command OS Project Summary**
+# **Project Summary**
 
   
 
@@ -223,7 +412,7 @@ This is not “yet another productivity app.” It’s a **Warrior King’s comm
         
     - ~~Crash-safe temp saves (.tmp with timestamp).~~
         
-    - ~~Markdown preview toggle (F5) with ASCII-style formatting.~~
+    - ~~Markdown preview toggle (Ctrl+Shift+V) with ASCII-style formatting.~~
         
     - ~~E-ink optimized: pure black/white, no borders, crisp lines.~~
         
@@ -242,7 +431,7 @@ This is not “yet another productivity app.” It’s a **Warrior King’s comm
     
 - ~~Close + reopen app, changes persist.~~
     
-- ~~F5 toggles between edit/preview with ASCII task formatting.~~
+- ~~Ctrl+Shift+V toggles between edit/preview with ASCII task formatting.~~
     
 - ~~Pure monospace hacker aesthetic: [ ] → [X], [DUE:3d], @tags.~~
     
@@ -526,55 +715,19 @@ G1,Fitness,Deadlift 600,550,2025-12-31,active
 
 # **Daily Use Deployment**
 
-## **Quick Setup for Test Driving**
+See the **Quick Start Commands** section above for all build, setup, and launch commands.
 
-```bash
-# Build the app (one-time setup)
-source .venv/bin/activate
-pyinstaller mcos.spec --clean
+## **What Setup Creates**
 
-# Install for daily use
-./setup_daily_use.sh
-```
-
-## **What This Creates**
-
-- **MCOS.app** → Full macOS application bundle
-- **~/mcos_vault** → Your personal vault directory
-- **Desktop launcher** → Double-click to launch MCOS
+- **MCOS.app** → Full macOS application bundle at `dist/MCOS.app`
+- **~/mcos_vault** → Your personal vault directory with folder structure
+- **Desktop launcher** → `~/Desktop/Launch MCOS.command` for quick access
 - **Applications install** → Launch via Spotlight (Cmd+Space "MCOS")
-
-## **Daily Usage**
-
-- **Desktop**: Double-click "Launch MCOS.command"
-- **Spotlight**: Cmd+Space, type "MCOS", Enter
-- **Finder**: Open /Applications/MCOS.app
-
-Your vault at `~/mcos_vault` will persist all your data between sessions.
-
-**Perfect for daily test driving to find real-world issues!**
-
----
-
-# **Development Workflow**
-
-## **Making Changes & Rebuilding**
-
-```bash
-# Quick rebuild after code changes
-./rebuild_app.sh
-```
-
-This script will:
-- Clean previous builds
-- Rebuild MCOS.app with latest changes
-- Optionally install to Applications
-- Test launch the new version
 
 ## **Key Features for Daily Use**
 
 - **Vault Persistence**: Remembers your last vault location (stored in `~/.mcos_config.json`)
-- **Custom Icon**: Terminal-style MCOS icon with monospace aesthetic
+- **Custom Icon**: Terminal-style MCOS icon with monospace aesthetic  
 - **Quick Launch**: Desktop launcher, Spotlight search, or Applications folder
 - **Instant Rebuild**: `./rebuild_app.sh` for development iterations
 
@@ -584,3 +737,5 @@ This script will:
 - **Your Vault**: `~/mcos_vault` (or your chosen location)
 - **Config**: `~/.mcos_config.json` (vault location memory)
 - **Desktop Launcher**: `~/Desktop/Launch MCOS.command`
+
+**Perfect for daily test driving to find real-world issues!**

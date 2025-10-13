@@ -53,9 +53,36 @@ class MainWindow(QMainWindow):
         self.editor.file_changed.connect(self.update_status)
         self.editor.modified_changed.connect(self.update_status)
         
+        # Add navigation shortcuts
+        self.setup_navigation_shortcuts()
+
+    def setup_navigation_shortcuts(self):
+        """Setup keyboard shortcuts for navigation between sidebar and editor"""
+        
+        # Ctrl+Left: Focus sidebar
+        focus_sidebar_action = QAction("Focus Sidebar", self)
+        focus_sidebar_action.setShortcut(QKeySequence("Ctrl+Left"))
+        focus_sidebar_action.triggered.connect(self.focus_sidebar)
+        self.addAction(focus_sidebar_action)
+        
+        # Ctrl+Right: Focus editor
+        focus_editor_action = QAction("Focus Editor", self)
+        focus_editor_action.setShortcut(QKeySequence("Ctrl+Right"))
+        focus_editor_action.triggered.connect(self.focus_editor)
+        self.addAction(focus_editor_action)
+    
+    def focus_sidebar(self):
+        """Set focus to the sidebar"""
+        self.sidebar.view.setFocus()
+    
+    def focus_editor(self):
+        """Set focus to the editor"""
+        self.editor.edit.setFocus()
 
     def open_file(self, path: str):
         self.editor.load_file(path)
+        # Automatically focus editor when opening a file
+        self.focus_editor()
         self.update_status()
     
     def update_status(self):
