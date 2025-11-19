@@ -129,7 +129,8 @@ xattr -d com.apple.quarantine /Applications/MCOS.app
 | Shortcut | Action |
 |----------|--------|
 | `Enter` | Open selected file/folder |
-| `Ctrl+N` | Create new file |
+| `Ctrl+N` | Create new markdown file |
+| `Ctrl+Shift+N` | Create new CSV file |
 | `Ctrl+D` | Delete selected file |
 | `Ctrl+R` | Rename selected file |
 
@@ -142,6 +143,19 @@ xattr -d com.apple.quarantine /Applications/MCOS.app
 | `Tab` | Indent line or selection |
 | `Shift+Tab` | Dedent line or selection |
 
+#### **CSV Tables**
+| Navigation | Action |
+|----------|--------|
+| Click cell | Edit cell content |
+| Double-click header | Edit column name |
+| `↑` from first row | Edit column header |
+| `→` from last column | Auto-creates new column |
+| `↓` from last row | Auto-creates new row |
+| `←` from empty column | Auto-deletes empty column |
+| `↑` from empty row | Auto-deletes empty row |
+| Arrow keys | Navigate between cells |
+| `Ctrl+Shift+V` | Toggle between table and raw CSV view |
+
 #### **Navigation**
 | Shortcut | Action |
 |----------|--------|
@@ -151,10 +165,10 @@ xattr -d com.apple.quarantine /Applications/MCOS.app
 | `Ctrl+Right` | Focus editor |
 | `Enter` | Open file (from sidebar) |
 
-#### **System (Planned)**
+#### **System**
 | Shortcut | Action | Status |
 |----------|--------|--------|
-| `Ctrl+K` | Quick file switcher | 🚧 Planned |
+| `Ctrl+K` | Show keyboard shortcuts |
 | `Ctrl+F` | Find in file | 🚧 Planned |
 | `Ctrl+H` | Find & replace | 🚧 Planned |
 | `Alt+Left` | Navigate back | 🚧 Planned |

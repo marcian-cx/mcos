@@ -59,7 +59,7 @@
  [],
  False,
  False,
- 1760385949,
+ 1763566659,
  [('runw',
    '/Users/EmreSakarya/Documents/Craft/marcian.cx/Art/code/mcos/.venv/lib/python3.9/site-packages/PyInstaller/bootloader/Darwin-64bit/runw',
    'EXECUTABLE')],

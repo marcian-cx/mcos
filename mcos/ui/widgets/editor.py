@@ -1,8 +1,9 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QPlainTextEdit, QLabel
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QPlainTextEdit, QLabel, QStackedWidget
 from PyQt6.QtGui import QFont, QAction, QKeySequence
 from PyQt6.QtCore import pyqtSignal, Qt
 from ...core.tasks import parse_task_line
 from ...services.markdown_editor_service import MarkdownEditorService
+from .csv_editor import CSVEditor
 import os, time, re
 
 class Editor(QWidget):
@@ -17,7 +18,17 @@ class Editor(QWidget):
         # Initialize the markdown service
         self.markdown_service = MarkdownEditorService()
         
-        self.edit = QPlainTextEdit()
+        # Create both editors
+        self.text_editor = QPlainTextEdit()
+        self.csv_editor = CSVEditor()
+        
+        # Use stacked widget to switch between editors
+        self.stack = QStackedWidget()
+        self.stack.addWidget(self.text_editor)  # Index 0
+        self.stack.addWidget(self.csv_editor)   # Index 1
+        
+        # For backward compatibility, keep reference to text editor as 'edit'
+        self.edit = self.text_editor
         font = QFont("Monaco", 12)
         font.setStyleHint(QFont.StyleHint.Monospace)
         self.edit.setFont(font)
@@ -83,7 +94,7 @@ class Editor(QWidget):
         lay.setContentsMargins(0, 0, 0, 0)
         lay.setSpacing(0)
         lay.addWidget(self.filename_label)
-        lay.addWidget(self.edit)
+        lay.addWidget(self.stack)
 
         save_action = QAction("Save", self)
         save_action.setShortcut(QKeySequence("Ctrl+S"))
@@ -92,28 +103,47 @@ class Editor(QWidget):
         
 
     def load_file(self, path: str):
-        with open(path, "r", encoding="utf-8") as f:
-            content = f.read()
-            self.edit.setPlainText(content)
         self.path = path
-        self.modified = False
         
         # Update filename label with terminal-style formatting
         filename = os.path.basename(path)
         self.filename_label.setText(f"<< {filename}")
         
+        # Check if it's a CSV file
+        if path.lower().endswith('.csv'):
+            # Switch to CSV editor
+            self.stack.setCurrentIndex(1)
+            self.csv_editor.load_file(path)
+            # Connect CSV editor signals
+            self.csv_editor.file_changed.connect(lambda p: self.file_changed.emit())
+            self.csv_editor.modified_changed.connect(self._on_csv_modified)
+            self.modified = self.csv_editor.modified
+        else:
+            # Switch to text editor
+            self.stack.setCurrentIndex(0)
+            with open(path, "r", encoding="utf-8") as f:
+                content = f.read()
+                self.edit.setPlainText(content)
+            self.modified = False
+
         self.file_changed.emit()
         self.modified_changed.emit()
 
     def save(self):
         if not self.path: return
         
-        text = self.edit.toPlainText()
-        tmp = f"{self.path}.~{int(time.time())}.tmp"
-        with open(tmp, "w", encoding="utf-8") as f:
-            f.write(text)
-        os.replace(tmp, self.path)
-        self.modified = False
+        # Check which editor is currently active
+        if self.stack.currentIndex() == 1:  # CSV editor
+            self.csv_editor.save()
+            self.modified = self.csv_editor.modified
+        else:  # Text editor
+            text = self.edit.toPlainText()
+            tmp = f"{self.path}.~{int(time.time())}.tmp"
+            with open(tmp, "w", encoding="utf-8") as f:
+                f.write(text)
+            os.replace(tmp, self.path)
+            self.modified = False
+        
         self.modified_changed.emit()
 
     def _handle_task_toggle(self) -> bool:
@@ -199,6 +229,11 @@ class Editor(QWidget):
         cursor.insertText('\n'.join(new_lines))
         
         return True
+    
+    def _on_csv_modified(self):
+        """Handle CSV editor modification changes"""
+        self.modified = self.csv_editor.modified
+        self.modified_changed.emit()
 
     def _mark_dirty(self):
         was_modified = self.modified

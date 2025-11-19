@@ -3,6 +3,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction, QKeySequence
 from .widgets.sidebar import Sidebar
 from .widgets.editor import Editor
+from .widgets.keyboard_shortcuts_modal import KeyboardShortcutsModal
 
 class MainWindow(QMainWindow):
     def __init__(self, vault_path: str):
@@ -33,7 +34,7 @@ class MainWindow(QMainWindow):
         """)
 
         self.editor = Editor()
-        self.sidebar = Sidebar(vault_path, on_open=self.open_file)
+        self.sidebar = Sidebar(vault_path, on_open=self.open_file, on_show_shortcuts=self.show_shortcuts_modal)
         
         self.status_bar = QStatusBar()
         self.setStatusBar(self.status_bar)
@@ -58,18 +59,24 @@ class MainWindow(QMainWindow):
 
     def setup_navigation_shortcuts(self):
         """Setup keyboard shortcuts for navigation between sidebar and editor"""
-        
+
         # Ctrl+Left: Focus sidebar
         focus_sidebar_action = QAction("Focus Sidebar", self)
         focus_sidebar_action.setShortcut(QKeySequence("Ctrl+Left"))
         focus_sidebar_action.triggered.connect(self.focus_sidebar)
         self.addAction(focus_sidebar_action)
-        
+
         # Ctrl+Right: Focus editor
         focus_editor_action = QAction("Focus Editor", self)
         focus_editor_action.setShortcut(QKeySequence("Ctrl+Right"))
         focus_editor_action.triggered.connect(self.focus_editor)
         self.addAction(focus_editor_action)
+
+        # Ctrl+K: Show keyboard shortcuts
+        shortcuts_action = QAction("Show Keyboard Shortcuts", self)
+        shortcuts_action.setShortcut(QKeySequence("Ctrl+K"))
+        shortcuts_action.triggered.connect(self.show_shortcuts_modal)
+        self.addAction(shortcuts_action)
     
     def focus_sidebar(self):
         """Set focus to the sidebar"""
@@ -78,6 +85,11 @@ class MainWindow(QMainWindow):
     def focus_editor(self):
         """Set focus to the editor"""
         self.editor.edit.setFocus()
+
+    def show_shortcuts_modal(self):
+        """Show the keyboard shortcuts modal"""
+        modal = KeyboardShortcutsModal(self)
+        modal.exec()
 
     def open_file(self, path: str):
         self.editor.load_file(path)

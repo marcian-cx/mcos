@@ -1,16 +1,17 @@
 # mcos/ui/widgets/sidebar.py
-from PyQt6.QtWidgets import QWidget, QTreeView, QVBoxLayout, QInputDialog, QMessageBox
+from PyQt6.QtWidgets import QWidget, QTreeView, QVBoxLayout, QInputDialog, QMessageBox, QPushButton, QLabel
 from PyQt6.QtGui import QStandardItemModel, QStandardItem, QKeySequence, QAction
 from PyQt6.QtCore import Qt, QModelIndex
 import os
 
-MD_FILTER = (".md", ".markdown")
+MD_FILTER = (".md", ".markdown", ".csv")
 
 class Sidebar(QWidget):
-    def __init__(self, vault_path: str, on_open):
+    def __init__(self, vault_path: str, on_open, on_show_shortcuts=None):
         super().__init__()
         self.vault_path = os.path.abspath(vault_path)
         self.on_open = on_open
+        self.on_show_shortcuts = on_show_shortcuts
 
         self.view = QTreeView()
         self.view.setHeaderHidden(True)
@@ -67,7 +68,11 @@ class Sidebar(QWidget):
                     self._open(current)
                 return
             elif event.key() == Qt.Key.Key_N and event.modifiers() & Qt.KeyboardModifier.ControlModifier:
-                self._new_file()
+                # Check if Shift is also pressed for CSV
+                if event.modifiers() & Qt.KeyboardModifier.ShiftModifier:
+                    self._new_csv_file()
+                else:
+                    self._new_file()
                 return
             elif event.key() == Qt.Key.Key_D and event.modifiers() & Qt.KeyboardModifier.ControlModifier:
                 self._delete_file()
@@ -79,20 +84,39 @@ class Sidebar(QWidget):
         self.view.keyPressEvent = keypress_handler
         
         # Keyboard shortcuts will be added by the main window
-        
+
+        # Shortcuts button at the bottom
+        self.shortcuts_button = QPushButton("⌨ Shortcuts (Ctrl+K)")
+        self.shortcuts_button.setStyleSheet("""
+        QPushButton {
+            background-color: #000000;
+            color: #666666;
+            border: none;
+            font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+            font-size: 10px;
+            padding: 4px 8px;
+            text-align: left;
+        }
+        QPushButton:hover {
+            color: #ffffff;
+            background-color: #111111;
+        }
+        """)
+        self.shortcuts_button.clicked.connect(self._show_shortcuts)
+
         lay = QVBoxLayout(self)
+        lay.setContentsMargins(0, 0, 0, 0)
+        lay.setSpacing(0)
         lay.addWidget(self.view)
+        lay.addWidget(self.shortcuts_button)
+
+    def _show_shortcuts(self):
+        """Show the keyboard shortcuts modal"""
+        if self.on_show_shortcuts:
+            self.on_show_shortcuts()
 
     def _add_dir(self, parent_item: QStandardItem, path: str):
-        # Add directory node with simple caret - no prefix lines
-        dir_name = os.path.basename(path) or path
-        dir_item = QStandardItem(f"▶ {dir_name}")
-        dir_item.setEditable(False)
-        dir_item.setData(path, Qt.ItemDataRole.UserRole)
-        dir_item.setData("directory", Qt.ItemDataRole.UserRole + 1)
-        parent_item.appendRow(dir_item)
-
-        # Get all entries
+        # Get all entries first to determine if folder is empty
         try:
             entries = sorted(os.listdir(path), key=str.lower)
         except PermissionError:
@@ -102,6 +126,19 @@ class Sidebar(QWidget):
         dirs = [e for e in entries if os.path.isdir(os.path.join(path, e)) and not e.startswith('.')]
         files = [e for e in entries if os.path.isfile(os.path.join(path, e)) and e.lower().endswith(MD_FILTER)]
         
+        # Determine if folder is empty (no subdirs or supported files)
+        is_empty = len(dirs) == 0 and len(files) == 0
+        
+        # Add directory node with appropriate icon
+        dir_name = os.path.basename(path) or path
+        icon = "▷" if is_empty else "▶"  # Empty triangle for empty folders
+        dir_item = QStandardItem(f"{icon} {dir_name}")
+        dir_item.setEditable(False)
+        dir_item.setData(path, Qt.ItemDataRole.UserRole)
+        dir_item.setData("directory", Qt.ItemDataRole.UserRole + 1)
+        dir_item.setData(is_empty, Qt.ItemDataRole.UserRole + 2)  # Store empty status
+        parent_item.appendRow(dir_item)
+
         # Add directories
         for name in dirs:
             full = os.path.join(path, name)
@@ -215,48 +252,101 @@ class Sidebar(QWidget):
         item_type = item.data(Qt.ItemDataRole.UserRole + 1)
         path = item.data(Qt.ItemDataRole.UserRole)
         
-        # Get directory path
         if item_type == "file":
-            dir_path = os.path.dirname(path)
-        else:  # directory
-            dir_path = path
+            base_dir = os.path.dirname(path)
+        else:
+            base_dir = path
             
-        # Ask for filename
         filename, ok = QInputDialog.getText(
             self, 
             "New File", 
-            "Enter filename (without .md extension):",
+            "Enter path/filename (folder/subfolder/file):",
             text=""
         )
         
         if not ok or not filename.strip():
             return
             
-        # Ensure .md extension
+        filename = filename.strip()
+        
         if not filename.endswith('.md'):
             filename += '.md'
             
-        file_path = os.path.join(dir_path, filename)
+        file_path = os.path.join(base_dir, filename)
         
-        # Check if file already exists
         if os.path.exists(file_path):
             QMessageBox.warning(self, "File Exists", f"File '{filename}' already exists!")
             return
             
-        # Create the file
         try:
+            dir_path = os.path.dirname(file_path)
+            os.makedirs(dir_path, exist_ok=True)
+            
+            base_filename = os.path.basename(filename)
             with open(file_path, 'w') as f:
-                f.write(f"# {filename[:-3]}\n\n")  # Write title without .md
+                f.write(f"# {base_filename[:-3]}\n\n")
             
-            # Refresh the tree
             self._populate()
-            
-            # Open the new file
             self.on_open(file_path)
             
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to create file: {str(e)}")
-    
+
+    def _new_csv_file(self):
+        """Create a new CSV file"""
+        current = self.view.currentIndex()
+        if not current.isValid():
+            return
+            
+        item = self.model.itemFromIndex(current)
+        if not item:
+            return
+            
+        item_type = item.data(Qt.ItemDataRole.UserRole + 1)
+        path = item.data(Qt.ItemDataRole.UserRole)
+        
+        if item_type == "file":
+            base_dir = os.path.dirname(path)
+        else:
+            base_dir = path
+        
+        filename, ok = QInputDialog.getText(
+            self, 
+            "New CSV File", 
+            "Enter path/filename (folder/subfolder/file):",
+            text=""
+        )
+        
+        if not ok or not filename.strip():
+            return
+            
+        filename = filename.strip()
+        
+        if not filename.endswith('.csv'):
+            filename += '.csv'
+            
+        file_path = os.path.join(base_dir, filename)
+        
+        if os.path.exists(file_path):
+            QMessageBox.warning(self, "File Exists", f"File '{filename}' already exists.")
+            return
+        
+        try:
+            dir_path = os.path.dirname(file_path)
+            os.makedirs(dir_path, exist_ok=True)
+            
+            import csv
+            with open(file_path, 'w', newline='', encoding='utf-8') as f:
+                writer = csv.writer(f)
+                writer.writerow(['Column1', 'Column2', 'Column3'])
+                writer.writerow(['', '', ''])
+            
+            self._populate()
+            self.on_open(file_path)
+            
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Failed to create CSV file: {str(e)}")
+
     def _delete_file(self):
         """Delete the selected file"""
         current = self.view.currentIndex()
@@ -346,20 +436,25 @@ class Sidebar(QWidget):
             QMessageBox.critical(self, "Error", f"Failed to rename file: {str(e)}")
 
     def _on_expanded(self, index):
-        """Handle directory expansion - change ▶ to ▼"""
+        """Handle directory expansion - change ▶/▷ to ▼"""
         item = self.model.itemFromIndex(index)
         if item and item.data(Qt.ItemDataRole.UserRole + 1) == "directory":
             text = item.text()
-            if "▶" in text:
-                new_text = text.replace("▶", "▼")
+            is_empty = item.data(Qt.ItemDataRole.UserRole + 2)
+            if "▶" in text or "▷" in text:
+                # Always use ▼ for expanded, regardless of empty status
+                new_text = text.replace("▶", "▼").replace("▷", "▼")
                 item.setText(new_text)
 
     def _on_collapsed(self, index):
-        """Handle directory collapse - change ▼ to ▶"""
+        """Handle directory collapse - change ▼ back to ▶/▷"""
         item = self.model.itemFromIndex(index)
         if item and item.data(Qt.ItemDataRole.UserRole + 1) == "directory":
             text = item.text()
+            is_empty = item.data(Qt.ItemDataRole.UserRole + 2)
             if "▼" in text:
-                new_text = text.replace("▼", "▶")
+                # Use ▷ for empty folders, ▶ for non-empty
+                icon = "▷" if is_empty else "▶"
+                new_text = text.replace("▼", icon)
                 item.setText(new_text)
             

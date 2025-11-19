@@ -390,7 +390,7 @@
 		</data>
 		<key>Resources/base_library.zip</key>
 		<data>
-		UB/Ze0y8ZvpC/3q2JqKWregRf7k=
+		6+lpRaW5sHalfflJVDYL0M1J3ME=
 		</data>
 		<key>Resources/dateutil/zoneinfo/dateutil-zoneinfo.tar.gz</key>
 		<data>
@@ -398,19 +398,23 @@
 		</data>
 		<key>Resources/demo_vault/Calendar/test.md</key>
 		<data>
-		RH+Ny5n8d4KBi910d4HXHKb7sq8=
+		oUoBNMMnyF/LKEljjcaEeG1/Kds=
 		</data>
 		<key>Resources/demo_vault/Goals/goals.csv</key>
 		<data>
-		uxTPdP8G2m1phgodMCT64xnpMl0=
+		SkAOTMxV4JCy+3qK6kLCvrnQpho=
+		</data>
+		<key>Resources/demo_vault/Goals/q4_goals.csv</key>
+		<data>
+		3OLb+9h4RRIxTKC3YEOmzfAK4B0=
+		</data>
+		<key>Resources/demo_vault/Goals/test.csv</key>
+		<data>
+		Jr6qLtKpII/zfZiRrBz31DMOJOE=
 		</data>
 		<key>Resources/demo_vault/Inbox/inbox.md</key>
 		<data>
 		RlPwODm6eTR6fxm54jmSvmtF2uI=
-		</data>
-		<key>Resources/demo_vault/Notes/sample-note.md</key>
-		<data>
-		pyraOq4MqwIHfCBSWk7fUT5t690=
 		</data>
 		<key>Resources/demo_vault/Projects/example-project.md</key>
 		<data>
@@ -5367,7 +5371,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			PcClXND+5D45BQiT2pEzYtQ1mPJLrmHk4cU0rlljznM=
+			SFtZpC7ivN+clCMoydzWKd+x0arawrE14lwBcly9wkI=
 			</data>
 		</dict>
 		<key>Resources/dateutil/zoneinfo/dateutil-zoneinfo.tar.gz</key>
@@ -5381,14 +5385,28 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			CH02TntPP3+UMb6fDPh9frTLHcfsoJD1vDhZ4HQNk3o=
+			uNjBj23ApNcmLta6tSy5neE3Fj9ZYUrQxRDKuXndXHk=
 			</data>
 		</dict>
 		<key>Resources/demo_vault/Goals/goals.csv</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			DnCo+wuwiFqTdoL3c8z1wtxSXMWJYbXyMwEo2+w7RgY=
+			4qwnJIm3ir/snohMJbtwcoaKJR7NB1cuRhyQM5IEGds=
+			</data>
+		</dict>
+		<key>Resources/demo_vault/Goals/q4_goals.csv</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			aNN32saIsFj2ntSwMBnwv96f1OFdXFYIbps0vpx3Vdk=
+			</data>
+		</dict>
+		<key>Resources/demo_vault/Goals/test.csv</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			vjyzD45wZD47KojuttDu4jl1zoRO2aFcwAZUVT0wZw4=
 			</data>
 		</dict>
 		<key>Resources/demo_vault/Inbox/inbox.md</key>
@@ -5396,13 +5414,6 @@
 			<key>hash2</key>
 			<data>
 			47GkfETbgnx9UsoK1oy852byBIp58KiYlOBECM2NP3o=
-			</data>
-		</dict>
-		<key>Resources/demo_vault/Notes/sample-note.md</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			ieqznHnJjvqrCOJMTlXU/lnFMuBbYyKROPIx+3QN2QA=
 			</data>
 		</dict>
 		<key>Resources/demo_vault/Projects/example-project.md</key>

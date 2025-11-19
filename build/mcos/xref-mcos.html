@@ -3347,6 +3347,9 @@ imported by:
  &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
  &#8226;   <a href="#launch_mcos.py">launch_mcos.py</a>
  &#8226;   <a href="#mcos.ui.main_window">mcos.ui.main_window</a>
+ &#8226;   <a href="#mcos.ui.widgets.csv_editor">mcos.ui.widgets.csv_editor</a>
+ &#8226;   <a href="#mcos.ui.widgets.editor">mcos.ui.widgets.editor</a>
+ &#8226;   <a href="#mcos.ui.widgets.keyboard_shortcuts_modal">mcos.ui.widgets.keyboard_shortcuts_modal</a>
  &#8226;   <a href="#mcos.ui.widgets.sidebar">mcos.ui.widgets.sidebar</a>
 
   </div>
@@ -3398,6 +3401,9 @@ imported by:
  &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
  &#8226;   <a href="#launch_mcos.py">launch_mcos.py</a>
  &#8226;   <a href="#mcos.ui.main_window">mcos.ui.main_window</a>
+ &#8226;   <a href="#mcos.ui.widgets.csv_editor">mcos.ui.widgets.csv_editor</a>
+ &#8226;   <a href="#mcos.ui.widgets.editor">mcos.ui.widgets.editor</a>
+ &#8226;   <a href="#mcos.ui.widgets.keyboard_shortcuts_modal">mcos.ui.widgets.keyboard_shortcuts_modal</a>
  &#8226;   <a href="#mcos.ui.widgets.sidebar">mcos.ui.widgets.sidebar</a>
 
   </div>
@@ -3424,6 +3430,9 @@ imports:
 imported by:
     <a href="#launch_mcos.py">launch_mcos.py</a>
  &#8226;   <a href="#mcos.ui.main_window">mcos.ui.main_window</a>
+ &#8226;   <a href="#mcos.ui.widgets.csv_editor">mcos.ui.widgets.csv_editor</a>
+ &#8226;   <a href="#mcos.ui.widgets.editor">mcos.ui.widgets.editor</a>
+ &#8226;   <a href="#mcos.ui.widgets.keyboard_shortcuts_modal">mcos.ui.widgets.keyboard_shortcuts_modal</a>
  &#8226;   <a href="#mcos.ui.widgets.sidebar">mcos.ui.widgets.sidebar</a>
 
   </div>
@@ -9812,6 +9821,8 @@ imports:
 imported by:
     <a href="#importlib.metadata">importlib.metadata</a>
  &#8226;   <a href="#importlib_metadata">importlib_metadata</a>
+ &#8226;   <a href="#mcos.ui.widgets.csv_editor">mcos.ui.widgets.csv_editor</a>
+ &#8226;   <a href="#mcos.ui.widgets.sidebar">mcos.ui.widgets.sidebar</a>
  &#8226;   <a href="#pandas._testing.contexts">pandas._testing.contexts</a>
  &#8226;   <a href="#pandas.core.arrays.categorical">pandas.core.arrays.categorical</a>
  &#8226;   <a href="#pandas.io.formats.csvs">pandas.io.formats.csvs</a>
@@ -9943,6 +9954,8 @@ imported by:
  &#8226;   <a href="#_pytest.timing">_pytest.timing</a>
  &#8226;   <a href="#_pytest.tmpdir">_pytest.tmpdir</a>
  &#8226;   <a href="#_pytest.warning_types">_pytest.warning_types</a>
+ &#8226;   <a href="#mcos.core.tasks">mcos.core.tasks</a>
+ &#8226;   <a href="#mcos.services.markdown_editor_service">mcos.services.markdown_editor_service</a>
  &#8226;   <a href="#packaging._tokenizer">packaging._tokenizer</a>
  &#8226;   <a href="#pandas.core.dtypes.inference">pandas.core.dtypes.inference</a>
  &#8226;   <a href="#pandas.core.groupby.base">pandas.core.groupby.base</a>
@@ -9991,6 +10004,7 @@ imported by:
  &#8226;   <a href="#email.utils">email.utils</a>
  &#8226;   <a href="#http.cookiejar">http.cookiejar</a>
  &#8226;   <a href="#http.server">http.server</a>
+ &#8226;   <a href="#mcos.core.tasks">mcos.core.tasks</a>
  &#8226;   <a href="#pandas._libs.tslib">pandas._libs.tslib</a>
  &#8226;   <a href="#pandas._libs.tslibs.conversion">pandas._libs.tslibs.conversion</a>
  &#8226;   <a href="#pandas._libs.tslibs.nattype">pandas._libs.tslibs.nattype</a>
@@ -10157,6 +10171,7 @@ imported by:
  &#8226;   <a href="#dateutil.rrule">dateutil.rrule</a>
  &#8226;   <a href="#dateutil.tz.tz">dateutil.tz.tz</a>
  &#8226;   <a href="#launch_mcos.py">launch_mcos.py</a>
+ &#8226;   <a href="#mcos.core.tasks">mcos.core.tasks</a>
  &#8226;   <a href="#pandas.core.indexes.datetimes">pandas.core.indexes.datetimes</a>
 
   </div>
@@ -15596,6 +15611,7 @@ imported by:
  &#8226;   <a href="#launch_mcos.py">launch_mcos.py</a>
  &#8226;   <a href="#logging">logging</a>
  &#8226;   <a href="#lzma">lzma</a>
+ &#8226;   <a href="#mcos.ui.widgets.csv_editor">mcos.ui.widgets.csv_editor</a>
  &#8226;   <a href="#multiprocessing.connection">multiprocessing.connection</a>
  &#8226;   <a href="#multiprocessing.popen_forkserver">multiprocessing.popen_forkserver</a>
  &#8226;   <a href="#multiprocessing.popen_spawn_posix">multiprocessing.popen_spawn_posix</a>
@@ -16902,7 +16918,81 @@ imported by:
   <a target="code" href="/Users/EmreSakarya/Documents/Craft/marcian.cx/Art/code/mcos/mcos/__init__.py" type="text/plain"><tt>mcos</tt></a>
 <span class="moduletype">Package</span>  <div class="import">
 imported by:
-    <a href="#mcos.ui">mcos.ui</a>
+    <a href="#mcos.core">mcos.core</a>
+ &#8226;   <a href="#mcos.services">mcos.services</a>
+ &#8226;   <a href="#mcos.ui">mcos.ui</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="mcos.core"></a>
+  <a target="code" href="-" type="text/plain"><tt>mcos.core</tt></a>
+<span class="moduletype">NamespacePackage</span>  <div class="import">
+imports:
+    <a href="#mcos">mcos</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#mcos.core.tasks">mcos.core.tasks</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="mcos.core.tasks"></a>
+  <a target="code" href="/Users/EmreSakarya/Documents/Craft/marcian.cx/Art/code/mcos/mcos/core/tasks.py" type="text/plain"><tt>mcos.core.tasks</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#dataclasses">dataclasses</a>
+ &#8226;   <a href="#datetime">datetime</a>
+ &#8226;   <a href="#dateutil.parser">dateutil.parser</a>
+ &#8226;   <a href="#mcos.core">mcos.core</a>
+ &#8226;   <a href="#re">re</a>
+ &#8226;   <a href="#typing">typing</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#mcos.ui.widgets.editor">mcos.ui.widgets.editor</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="mcos.services"></a>
+  <a target="code" href="/Users/EmreSakarya/Documents/Craft/marcian.cx/Art/code/mcos/mcos/services/__init__.py" type="text/plain"><tt>mcos.services</tt></a>
+<span class="moduletype">Package</span>  <div class="import">
+imports:
+    <a href="#mcos">mcos</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#mcos.services.markdown_editor_service">mcos.services.markdown_editor_service</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="mcos.services.markdown_editor_service"></a>
+  <a target="code" href="/Users/EmreSakarya/Documents/Craft/marcian.cx/Art/code/mcos/mcos/services/markdown_editor_service.py" type="text/plain"><tt>mcos.services.markdown_editor_service</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#dataclasses">dataclasses</a>
+ &#8226;   <a href="#mcos.services">mcos.services</a>
+ &#8226;   <a href="#re">re</a>
+ &#8226;   <a href="#typing">typing</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#mcos.ui.widgets.editor">mcos.ui.widgets.editor</a>
 
   </div>
 
@@ -16935,6 +17025,7 @@ imports:
  &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
  &#8226;   <a href="#mcos.ui">mcos.ui</a>
  &#8226;   <a href="#mcos.ui.widgets.editor">mcos.ui.widgets.editor</a>
+ &#8226;   <a href="#mcos.ui.widgets.keyboard_shortcuts_modal">mcos.ui.widgets.keyboard_shortcuts_modal</a>
  &#8226;   <a href="#mcos.ui.widgets.sidebar">mcos.ui.widgets.sidebar</a>
 
   </div>
@@ -16956,8 +17047,31 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#mcos.ui.widgets.editor">mcos.ui.widgets.editor</a>
+    <a href="#mcos.ui.widgets.csv_editor">mcos.ui.widgets.csv_editor</a>
+ &#8226;   <a href="#mcos.ui.widgets.editor">mcos.ui.widgets.editor</a>
+ &#8226;   <a href="#mcos.ui.widgets.keyboard_shortcuts_modal">mcos.ui.widgets.keyboard_shortcuts_modal</a>
  &#8226;   <a href="#mcos.ui.widgets.sidebar">mcos.ui.widgets.sidebar</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="mcos.ui.widgets.csv_editor"></a>
+  <a target="code" href="/Users/EmreSakarya/Documents/Craft/marcian.cx/Art/code/mcos/mcos/ui/widgets/csv_editor.py" type="text/plain"><tt>mcos.ui.widgets.csv_editor</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#PyQt6.QtCore">PyQt6.QtCore</a>
+ &#8226;   <a href="#PyQt6.QtGui">PyQt6.QtGui</a>
+ &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
+ &#8226;   <a href="#csv">csv</a>
+ &#8226;   <a href="#io">io</a>
+ &#8226;   <a href="#mcos.ui.widgets">mcos.ui.widgets</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#mcos.ui.widgets.editor">mcos.ui.widgets.editor</a>
 
   </div>
 
@@ -16966,9 +17080,37 @@ imported by:
 <div class="node">
   <a name="mcos.ui.widgets.editor"></a>
   <a target="code" href="/Users/EmreSakarya/Documents/Craft/marcian.cx/Art/code/mcos/mcos/ui/widgets/editor.py" type="text/plain"><tt>mcos.ui.widgets.editor</tt></a>
-<span class="moduletype">InvalidSourceModule</span>  <div class="import">
+<span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#mcos.ui.widgets">mcos.ui.widgets</a>
+    <a href="#PyQt6.QtCore">PyQt6.QtCore</a>
+ &#8226;   <a href="#PyQt6.QtGui">PyQt6.QtGui</a>
+ &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
+ &#8226;   <a href="#mcos.core.tasks">mcos.core.tasks</a>
+ &#8226;   <a href="#mcos.services.markdown_editor_service">mcos.services.markdown_editor_service</a>
+ &#8226;   <a href="#mcos.ui.widgets">mcos.ui.widgets</a>
+ &#8226;   <a href="#mcos.ui.widgets.csv_editor">mcos.ui.widgets.csv_editor</a>
+ &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#re">re</a>
+ &#8226;   <a href="#time">time</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#mcos.ui.main_window">mcos.ui.main_window</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="mcos.ui.widgets.keyboard_shortcuts_modal"></a>
+  <a target="code" href="/Users/EmreSakarya/Documents/Craft/marcian.cx/Art/code/mcos/mcos/ui/widgets/keyboard_shortcuts_modal.py" type="text/plain"><tt>mcos.ui.widgets.keyboard_shortcuts_modal</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#PyQt6.QtCore">PyQt6.QtCore</a>
+ &#8226;   <a href="#PyQt6.QtGui">PyQt6.QtGui</a>
+ &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
+ &#8226;   <a href="#mcos.ui.widgets">mcos.ui.widgets</a>
 
   </div>
   <div class="import">
@@ -16987,6 +17129,7 @@ imports:
     <a href="#PyQt6.QtCore">PyQt6.QtCore</a>
  &#8226;   <a href="#PyQt6.QtGui">PyQt6.QtGui</a>
  &#8226;   <a href="#PyQt6.QtWidgets">PyQt6.QtWidgets</a>
+ &#8226;   <a href="#csv">csv</a>
  &#8226;   <a href="#mcos.ui.widgets">mcos.ui.widgets</a>
  &#8226;   <a href="#os">os</a>
 
@@ -24982,6 +25125,7 @@ imported by:
  &#8226;   <a href="#locale">locale</a>
  &#8226;   <a href="#logging">logging</a>
  &#8226;   <a href="#lzma">lzma</a>
+ &#8226;   <a href="#mcos.ui.widgets.editor">mcos.ui.widgets.editor</a>
  &#8226;   <a href="#mcos.ui.widgets.sidebar">mcos.ui.widgets.sidebar</a>
  &#8226;   <a href="#mimetypes">mimetypes</a>
  &#8226;   <a href="#multiprocessing.connection">multiprocessing.connection</a>
@@ -47595,6 +47739,9 @@ imported by:
  &#8226;   <a href="#markdown.serializers">markdown.serializers</a>
  &#8226;   <a href="#markdown.treeprocessors">markdown.treeprocessors</a>
  &#8226;   <a href="#markdown.util">markdown.util</a>
+ &#8226;   <a href="#mcos.core.tasks">mcos.core.tasks</a>
+ &#8226;   <a href="#mcos.services.markdown_editor_service">mcos.services.markdown_editor_service</a>
+ &#8226;   <a href="#mcos.ui.widgets.editor">mcos.ui.widgets.editor</a>
  &#8226;   <a href="#numpy._core._internal">numpy._core._internal</a>
  &#8226;   <a href="#numpy._typing._add_docstring">numpy._typing._add_docstring</a>
  &#8226;   <a href="#numpy.f2py._backends._meson">numpy.f2py._backends._meson</a>
@@ -49211,6 +49358,7 @@ imported by:
  &#8226;   <a href="#http.cookiejar">http.cookiejar</a>
  &#8226;   <a href="#http.server">http.server</a>
  &#8226;   <a href="#logging">logging</a>
+ &#8226;   <a href="#mcos.ui.widgets.editor">mcos.ui.widgets.editor</a>
  &#8226;   <a href="#multiprocessing.connection">multiprocessing.connection</a>
  &#8226;   <a href="#multiprocessing.managers">multiprocessing.managers</a>
  &#8226;   <a href="#multiprocessing.pool">multiprocessing.pool</a>
@@ -49797,6 +49945,8 @@ imported by:
  &#8226;   <a href="#markdown.serializers">markdown.serializers</a>
  &#8226;   <a href="#markdown.treeprocessors">markdown.treeprocessors</a>
  &#8226;   <a href="#markdown.util">markdown.util</a>
+ &#8226;   <a href="#mcos.core.tasks">mcos.core.tasks</a>
+ &#8226;   <a href="#mcos.services.markdown_editor_service">mcos.services.markdown_editor_service</a>
  &#8226;   <a href="#numpy._typing">numpy._typing</a>
  &#8226;   <a href="#numpy._typing._array_like">numpy._typing._array_like</a>
  &#8226;   <a href="#numpy._typing._char_codes">numpy._typing._char_codes</a>
